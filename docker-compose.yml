@@ -1,0 +1,35 @@
+version: '3'
+services:
+  ovms:
+    container_name: ovms
+    hostname: ovms
+    image: openvino/model_server:latest
+    command: /ie-serving-py/start_server.sh ie_serving model
+      --model_path /var/www/models
+      --model_name fast-neural-style-mosaic
+      --port 8080
+      --rest_port 8081
+    restart: on-failure
+    networks:
+      - network
+    expose:
+      - 8080
+      - 8081
+    ports:
+      - 8080:8080
+      - 8081:8081
+    volumes:
+      - ./models:/var/www/models
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ovms
+
+networks:
+  network:
+    driver: bridge

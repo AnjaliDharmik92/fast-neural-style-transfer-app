@@ -1,0 +1,79 @@
+<!-- upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Neural Style Transfer - Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+<body>
+    <h1>Fast Neural Style Transfer</h1>
+    <form id="upload-form" action="{{ url_for('style_transfer') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file-input" accept="image/*" required>
+        <button type="submit" id="transfer-button">Transfer Style</button>
+    </form>
+    <div id="preview-container">
+        <div id="image-preview-container">
+            <label>Original Image Preview</label>
+            <img id="image-preview" src="" alt="Image Preview">
+        </div>
+    </div>
+
+    <div id="loading-container" style="display: none;">
+        <p>Loading...</p>
+    </div>
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', function () {
+            const fileInput = document.getElementById('file-input');
+            const originalImagePreview = document.getElementById('image-preview');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    originalImagePreview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+
+        document.getElementById('upload-form').addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            const loadingContainer = document.getElementById('loading-container');
+            const transferButton = document.getElementById('transfer-button');
+            const originalImagePreview = document.getElementById('image-preview');
+
+            // Show loading state
+            loadingContainer.style.display = 'block';
+            transferButton.disabled = true;
+
+            // Reset image preview
+            originalImagePreview.src = '';
+
+            // Send the form data using fetch
+            const formData = new FormData(event.target);
+            fetch('/style_transfer', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading state
+                loadingContainer.style.display = 'none';
+                transferButton.disabled = false;
+
+                // Redirect to the output page with stylized image preview
+                window.location.href = `/output?stylized_image=${data.stylized_image}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors if needed
+            });
+        });
+    </script>
+</body>
+</html>

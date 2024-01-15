@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Neural Style Transfer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+<body>
+    <h1>Fast Neural Style Transfer</h1>
+    <form id="upload-form" action="{{ url_for('style_transfer') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file-input" accept="image/*" required>
+        <button type="submit">Transfer Style</button>
+    </form>
+    <div id="preview-container">
+        <div id="image-preview-container">
+            <label>Original Image Preview</label>
+            <img id="image-preview" src="" alt="Image Preview">
+        </div>
+        <div id="stylized-preview-container">
+            <label>Stylized Image Preview</label>
+            <img id="stylized-preview" src="" alt="Stylized Image Preview">
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle file input and preview
+        document.getElementById('file-input').addEventListener('change', function (event) {
+            const previewContainer = document.getElementById('preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const stylizedPreview = document.getElementById('stylized-preview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    stylizedPreview.src = '';
+                    previewContainer.style.display = 'block';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = '';
+                stylizedPreview.src = '';
+                previewContainer.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

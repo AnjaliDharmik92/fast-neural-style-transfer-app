@@ -1,0 +1,39 @@
+<!-- output.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Neural Style Transfer - Output</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+<body>
+    <h1>Fast Neural Style Transfer - Output</h1>
+
+    <div id="preview-container">
+        <div id="stylized-preview-container">
+            <label>Stylized Image Preview</label>
+            <img id="stylized-preview" src="" alt="Stylized Image Preview">
+        </div>
+    </div>
+
+    <a id="download-link" style="display: none;" download="stylized_image.jpg">Download Stylized Image</a>
+
+    <div id="loading-container" style="display: none;">
+        <p>Loading...</p>
+    </div>
+
+    <script>
+        // Retrieve the stylized image URL from the query parameters
+        const stylizedImageURL = new URLSearchParams(window.location.search).get("stylized_image");
+
+        // Display the stylized image preview
+        document.getElementById('stylized-preview').src = stylizedImageURL;
+
+        // Show the download link
+        const downloadLink = document.getElementById('download-link');
+        downloadLink.href = stylizedImageURL;
+        downloadLink.style.display = 'block';
+    </script>
+</body>
+</html>
