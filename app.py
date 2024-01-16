@@ -10,8 +10,8 @@ app = Flask(__name__)
 ie = IECore()
 
 # Load the OpenVINO model
-model_xml = "C:/Users/anjal/Documents/Python/project/models/1/fast-neural-style-mosaic.xml"
-model_bin = "C:/Users/anjal/Documents/Python/project/models/1/fast-neural-style-mosaic.bin"
+model_xml = "/models/1/fast-neural-style-mosaic.xml"
+model_bin = "/models/1/fast-neural-style-mosaic.bin"
 net = ie.read_network(model=model_xml, weights=model_bin)
 exec_net = ie.load_network(network=net, device_name='CPU')
 
